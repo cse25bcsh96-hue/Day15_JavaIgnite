@@ -1,81 +1,54 @@
-/*
-Ticket Booking System
+package JAVA_DAY_15;
+interface NotificationService {
+    void sendMessage();
+}
 
-A movie theater has:
+class EmailNotification implements NotificationService {
 
-Total Seats = 5
+    @Override
+    public void sendMessage() {
+        System.out.println("Email Notification Sent");
+    }
+}
 
-Create:
+class SMSNotification implements NotificationService {
 
-Multiple booking threads
-Requirements
-Each thread tries to book seats.
-If seats are available, booking succeeds.
-Otherwise print:
-Booking Failed
+    @Override
+    public void sendMessage() {
+        System.out.println("SMS Notification Sent");
+    }
+}
 
-Concepts Tested
-Threads
-Shared Resource
-Synchronized Method
+class OrderService {
 
-Instructions - 
-Create class Theater
+    private NotificationService notificationService;
 
-    Variable:
-        totalSeats = 5
+    public OrderService(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
-    synchronized method bookSeat(int seats)
+    public void placeOrder() {
+        System.out.println("Order Confirmed");
+        notificationService.sendMessage();
+    }
+}
 
-        If totalSeats >= seats
+public class ONLINE_FOOD_ORDER_NOTIFICATION {
 
-            Print:
-                ThreadName + " Booking Successful"
+    public static void main(String[] args) {
+    	// TODO Auto-generated method stub
+    	
+        NotificationService email = new EmailNotification();
+        OrderService order1 = new OrderService(email);
 
-            totalSeats = totalSeats - seats
+        order1.placeOrder();
 
-            Print remaining seats
+        System.out.println();
 
-        Else
+       
+        NotificationService sms = new SMSNotification();
+        OrderService order2 = new OrderService(sms);
 
-            Print:
-                ThreadName + " Booking Failed"
-
-
-Create class BookingThread extends Thread
-
-    Theater theater
-    int seatsRequired
-
-    Constructor receives:
-        theater
-        seatsRequired
-
-    run()
-
-        theater.bookSeat(seatsRequired)
-
-
-Main Method
-
-    Create Theater object
-
-    Create Thread1 -> wants 2 seats
-    Create Thread2 -> wants 2 seats
-    Create Thread3 -> wants 2 seats
-
-    Start Thread1
-    Start Thread2
-    Start Thread3
-
-
-Possible Output
-
-    Thread1 Booking Successful
-    Remaining Seats = 3
-
-    Thread2 Booking Successful
-    Remaining Seats = 1
-
-    Thread3 Booking Failed
-*/
+        order2.placeOrder();
+    }
+}
