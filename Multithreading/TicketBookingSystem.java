@@ -1,54 +1,59 @@
 package JAVA_DAY_15;
-interface NotificationService {
-    void sendMessage();
-}
+class Theater {
 
-class EmailNotification implements NotificationService {
+    int totalSeats =4;
 
-    @Override
-    public void sendMessage() {
-        System.out.println("Email Notification Sent");
+    public synchronized void bookSeat(int seats) {
+
+        if (totalSeats >= seats) {
+
+            System.out.println(Thread.currentThread().getName()+ " Booking Successful");
+
+            totalSeats = totalSeats - seats;
+
+            System.out.println("Remaining Seats = " + totalSeats);
+
+        } else {
+
+            System.out.println(Thread.currentThread().getName()+ " Booking Failed");
+        }
     }
 }
 
-class SMSNotification implements NotificationService {
+class BookingThread extends Thread {
 
-    @Override
-    public void sendMessage() {
-        System.out.println("SMS Notification Sent");
+    Theater theater;
+    int seatsRequired;
+
+    BookingThread(Theater theater, int seatsRequired) {
+        this.theater = theater;
+        this.seatsRequired = seatsRequired;
+    }
+
+    public void run() {
+        theater.bookSeat(seatsRequired);
     }
 }
 
-class OrderService {
-
-    private NotificationService notificationService;
-
-    public OrderService(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
-
-    public void placeOrder() {
-        System.out.println("Order Confirmed");
-        notificationService.sendMessage();
-    }
-}
-
-public class ONLINE_FOOD_ORDER_NOTIFICATION {
+public class MOVIE_TICKET_BOOKING_SYSTEM {
 
     public static void main(String[] args) {
     	// TODO Auto-generated method stub
     	
-        NotificationService email = new EmailNotification();
-        OrderService order1 = new OrderService(email);
+        Theater theater = new Theater();
 
-        order1.placeOrder();
+        BookingThread t1 = new BookingThread(theater, 1);
+        BookingThread t2 = new BookingThread(theater, 1);
+        BookingThread t3 = new BookingThread(theater, 1);
+        BookingThread t4 = new BookingThread(theater, 1);
+        t1.setName("SUNIL");
+        t2.setName("ARJUN");
+        t3.setName("KRISHNA");
+        t4.setName("BALRAM");
 
-        System.out.println();
-
-       
-        NotificationService sms = new SMSNotification();
-        OrderService order2 = new OrderService(sms);
-
-        order2.placeOrder();
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
     }
 }
